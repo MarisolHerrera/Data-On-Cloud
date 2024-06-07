@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Datos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Registro de Estudiantes</h1>
+    <form id="student-form">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" required><br>
+        <label for="boleta">Boleta:</label>
+        <input type="number" id="boleta" required><br>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" required><br>
+        <label for="semestre">Semestre:</label>
+        <input type="number" id="semestre" min="1" max="8" required><br>
+        <label for="carrera">Carrera:</label>
+        <select id="carrera" required>
+            <option value="Ciencias de la informática">Ciencias de la informática</option>
+            <option value="Administración industrial">Administración industrial</option>
+            <option value="Ingeniería industrial">Ingeniería industrial</option>
+            <option value="Ingeniería ferroviaria">Ingeniería ferroviaria</option>
+        </select><br>
+        <button type="submit">Registrar</button>
+    </form>
+    <p id="status"></p>
+    <script type="module">
+
+        // Importa las funciones que necesitas del SDK de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+//CODIGO PERSONALIZADO COPIADO-----------------------------------------------------------
+        
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPKc6WChSvwQNkQE-H9F4Igu1BTY0rFOw",
+            authDomain: "datacloud-7d602.firebaseapp.com",
+            projectId: "datacloud-7d602",
+            storageBucket: "datacloud-7d602.appspot.com",
+            messagingSenderId: "267677960415",
+            appId: "1:267677960415:web:7232be55fb46b5d082416a",
+            measurementId: "G-G49GQQVNS2"
+        };
+//FIN DE CODIGO PERSONALIZADO--------------------------------------------------------------
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('student-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const boleta = document.getElementById('boleta').value;
+            const edad = document.getElementById('edad').value;
+            const semestre = document.getElementById('semestre').value;
+            const carrera = document.getElementById('carrera').value;
+
+            try {
+                await addDoc(collection(db, "students"), {
+                    name: name,
+                    boleta: boleta,
+                    edad: edad,
+                    semestre: semestre,
+                    carrera: carrera
+                });
+                document.getElementById('status').innerText = "Datos guardados correctamente";
+            } catch (error) {
+                console.error("Error al guardar los datos: ", error);
+            }
+        });
+    </script>
+</body>
+</html>
